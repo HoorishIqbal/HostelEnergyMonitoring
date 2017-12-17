@@ -1,0 +1,61 @@
+void setup() {
+   Serial.begin(9600);
+   pinMode(A0,INPUT);
+   pinMode(A1,INPUT);
+   pinMode(5,OUTPUT);  
+}
+
+int cur_s1=0;
+int cur_s2=0;
+float ct_s1=0;
+float ct_s2=0;
+float cur1=0;
+float cur2=0;
+
+void loop() {
+
+  for(i=0;i<40;i++)
+  {
+      /*volt=volt+analogRead(A4);*/
+      cur_s1=analogRead(A0);
+      delayMicroseconds(100);
+      cur_s1=abs(512-cur_s1);
+      ct_s1=cur_s1/204.8;
+      ct_s1=ct_s1*ct_s1;
+      cur1= cur1 +ct_s1;
+      delayMicroseconds(900);  
+  }
+
+  cur1=(cur1/40);
+  cur1=sqrt(cur1)/0.1;
+  if(cur1<0.2)
+  {
+    cur1=0;
+  }
+  Serial.print("Current,");Serial.print(cur1);Serial.print(",VOLTS,");Serial.print("220");Serial.print(",POWER,");Serial.print(cur1*220);Serial.println(",WATT");
+  unsigned int duty=(float)((cur1)/20)*255;
+  delay(1000);
+
+  for(i=0;i<40;i++)
+  {
+      /*volt=volt+analogRead(A4);*/
+      cur_s2=analogRead(A1);
+      delayMicroseconds(100);
+      cur_s2=abs(512-cur_s2);
+      ct_s2=cur_s2/204.8;
+      ct_s2=ct_s2*ct_s2;
+      cur2= cur2 +ct_s2;
+      delayMicroseconds(900);  
+  }
+
+  cur2=(cur2/40);
+  cur2=sqrt(cur2)/0.1;
+  if(cur2<0.2)
+  {
+    cur2=0;
+  }
+  Serial.print("Current,");Serial.print(cur2);Serial.print(",VOLTS,");Serial.print("220");Serial.print(",POWER,");Serial.print(cur2*220);Serial.println(",WATT");
+  unsigned int duty=(float)((cur2)/20)*255;
+  delay(1000);
+
+}
